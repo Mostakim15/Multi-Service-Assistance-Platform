@@ -1,0 +1,68 @@
+body {
+    font-family: Arial, sans-serif;
+    background: #f5f7fa;
+    color: #222;
+    margin: 0;
+    padding: 0;
+}
+
+header.topbar {
+    background: #0078d7;
+    color: white;
+    padding: 15px 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+a {
+    color: #0078d7;
+    text-decoration: none;
+}
+
+.auth-container, .hero {
+    text-align: center;
+    padding: 30px;
+    margin-top: 40px;
+}
+
+button {
+    background: #0078d7;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 6px;
+}
+button:hover { background: #005fa3; }
+
+table { width: 80%; margin: 20px auto; border-collapse: collapse; }
+th, td { padding: 10px; border: 1px solid #ddd; text-align: center; }
+th { background: #0078d7; color: white; }
+
+/* Header / site layout additions */
+.site-header { background: #ffffff; border-bottom: 1px solid #edf2f7; position: sticky; top: 0; z-index: 50; }
+.site-header .header-inner { display:flex; align-items:center; justify-content:space-between; padding:12px 0; }
+.site-header .brand-link { display:flex; align-items:center; gap:10px; }
+.site-header .logo { height:36px; width:36px; }
+.site-header .brand-title { font-weight:700; color:#0b5073; }
+.site-header .main-nav a { margin:0 10px; color:#4a5568; text-decoration:none; }
+.site-header .main-nav a:hover { color:#0b5fa3; }
+.site-header .search-input { padding:6px 10px; border-radius:6px; border:1px solid #e2e8f0; }
+.header-actions { display:flex; align-items:center; gap:12px; }
+
+/* Dashboard layout */
+.btn { display:inline-block; padding:8px 10px; background:#0b5fa3; color:#fff; border-radius:6px; text-decoration:none; }
+.btn.light { background: rgba(255,255,255,0.9); color:#0b5fa3; border:1px solid rgba(0,0,0,0.06); }
+.requests-table { width:100%; border-collapse:collapse; }
+.requests-table th, .requests-table td { padding:8px 10px; border:1px solid #eee; text-align:left; }
+
+.site-footer { margin-top:28px; padding:18px 0; background:#f7fafc; border-top:1px solid #edf2f7; }
+.site-footer .footer-inner { display:flex; justify-content:space-between; color:#718096; font-size:14px; }
+
+/* Small responsive tweaks */
+@media (max-width:900px) {
+    .dashboard-grid { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: 1fr 1fr; }
+}
+
