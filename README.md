@@ -46,9 +46,7 @@ Run:
 git pull origin main --rebase
 git push origin main
 
-📞 Team Notes
+📞 Team Notes 
 Everyone must pull before editing.
-
 Do not modify another member’s work without permission.
-
 Database changes must be shared via updated .sql file.
