@@ -60,6 +60,56 @@ th { background: #0078d7; color: white; }
 .site-footer { margin-top:28px; padding:18px 0; background:#f7fafc; border-top:1px solid #edf2f7; }
 .site-footer .footer-inner { display:flex; justify-content:space-between; color:#718096; font-size:14px; }
 
+/* Make footer stay at the bottom of the page even when content is short */
+html, body { height: 100%; }
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh; /* ensure viewport height */
+}
+main { flex: 1 0 auto; }
+
+/* Fixed footer: prevent content overlap by adding bottom padding equal to footer height */
+:root { --msap-footer-height: 72px; }
+.msap-footer { box-sizing: border-box; height: var(--msap-footer-height); }
+.msap-footer-fixed { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; }
+body { padding-bottom: var(--msap-footer-height); }
+
+/* On small screens, increase footer height and body padding to match */
+@media (max-width: 640px) {
+    :root { --msap-footer-height: 96px; }
+}
+/* MSAP footer styling to make it look clean on all pages */
+.msap-footer { background: #08223f; }
+.msap-footer .links a { color: rgba(255,255,255,0.95); text-decoration: none; }
+.msap-footer .links a:hover { text-decoration: underline; }
+.msap-footer .text-sm { color: rgba(230,238,251,0.95); }
+.msap-footer .max-w-7xl { width: 100%; }
+.msap-footer { box-shadow: 0 -6px 20px rgba(3,7,18,0.45); }
+
+/* Table heading improvements for better contrast & readability */
+table thead th,
+.min-w-full thead th,
+.requests-table th {
+    background-color: #0b2545; /* strong navy */
+    color: #ffffff; /* high contrast */
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    letter-spacing: 0.04em;
+    padding: 0.75rem 0.75rem;
+    border-bottom: 2px solid rgba(255,255,255,0.06);
+}
+
+/* Make row hover clear and subtle */
+table tbody tr:hover { background: #f8fafc; }
+
+/* Compact table cells for smaller screens */
+@media (max-width: 640px) {
+    table thead th { font-size: 0.78rem; }
+    table td, table th { padding: 0.6rem 0.5rem; }
+}
+
 /* Small responsive tweaks */
 @media (max-width:900px) {
     .dashboard-grid { grid-template-columns: 1fr; }

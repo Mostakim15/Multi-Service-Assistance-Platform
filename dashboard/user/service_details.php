@@ -27,31 +27,54 @@ if (!$service) {
 
 // Handle request button
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    $req = $pdo->prepare("INSERT INTO service_requests (user_id, service_id, status, request_date) VALUES (?, ?, 'pending', NOW())");
-    $req->execute([$_SESSION['user']['id'], $id]);
-    $msg = "Your request has been sent successfully!";
+    // prevent duplicate/active requests
+    $chk = $pdo->prepare("SELECT COUNT(*) FROM service_requests WHERE user_id = ? AND service_id = ? AND status IN ('pending','accepted','on_route')");
+    $chk->execute([$_SESSION['user']['id'], $id]);
+    if ($chk->fetchColumn() > 0) {
+        $error = 'You already have an active request for this service.';
+    } else {
+        try {
+            // note: schema uses `requested_at` (not request_date)
+            $req = $pdo->prepare("INSERT INTO service_requests (user_id, service_id, status, requested_at) VALUES (?, ?, 'pending', NOW())");
+            $req->execute([$_SESSION['user']['id'], $id]);
+            $msg = "Your request has been sent successfully!";
+        } catch (PDOException $e) {
+            error_log('Service request error: ' . $e->getMessage());
+            $error = 'Unable to send request at this time. Please try again later.';
+        }
+    }
 }
 ?>
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-<title>Service Details</title>
-<link rel="stylesheet" href="../../public/css/style.css">
+    <meta charset="utf-8">
+    <title>Service Details | MSAP</title>
+    <link rel="stylesheet" href="../../public/css/style.css">
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
-<body>
-<a href="index.php">&larr; Back to Map</a>
+<body class="bg-gray-50 text-gray-800">
+    <?php require_once __DIR__ . '/../../includes/header.php'; ?>
 
-<h2><?= htmlspecialchars($service['service_name']) ?></h2>
-<p><b>Category:</b> <?= htmlspecialchars($service['category_name']) ?></p>
-<p><b>Provider:</b> <?= htmlspecialchars($service['provider_name']) ?></p>
-<p><b>Phone:</b> <?= htmlspecialchars($service['phone']) ?></p>
-<p><b>Description:</b><br><?= nl2br(htmlspecialchars($service['description'])) ?></p>
+    <main class="max-w-3xl mx-auto mt-10 px-4">
+        <a href="index.php" class="text-slate-600 hover:text-sky-600">&larr; Back to Map</a>
 
-<?php if(isset($msg)) echo "<p style='color:green;'>$msg</p>"; ?>
+        <div class="bg-white shadow rounded-lg p-6 mt-4">
+            <h2 class="text-2xl font-bold mb-2"><?= htmlspecialchars($service['service_name']) ?></h2>
+            <p class="text-sm text-slate-600 mb-1"><strong>Category:</strong> <?= htmlspecialchars($service['category_name']) ?></p>
+            <p class="text-sm text-slate-600 mb-1"><strong>Provider:</strong> <?= htmlspecialchars($service['provider_name']) ?></p>
+            <p class="text-sm text-slate-600 mb-3"><strong>Phone:</strong> <?= htmlspecialchars($service['phone']) ?></p>
+            <div class="prose max-w-none mb-4"><strong>Description:</strong><br><?= nl2br(htmlspecialchars($service['description'])) ?></div>
 
-<form method="POST">
-  <button type="submit">Request This Service</button>
-</form>
+            <?php if(isset($msg)): ?><p class="text-green-600 mb-4"><?= htmlspecialchars($msg) ?></p><?php endif; ?>
+            <?php if(isset($error)): ?><p class="text-red-600 mb-4"><?= htmlspecialchars($error) ?></p><?php endif; ?>
 
+            <form method="POST">
+                <button type="submit" class="px-4 py-2 bg-indigo-600 text-white rounded-md">Request This Service</button>
+            </form>
+        </div>
+    </main>
+
+    <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
 </body>
 </html>

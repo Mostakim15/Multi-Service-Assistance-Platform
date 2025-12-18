@@ -1,13 +1,18 @@
 Multi-Service Assistance Platform (MSAP)
 A web-based platform where users can request various home & local services.
 Built with PHP, MySQL, HTML, CSS, JS using XAMPP.
-________________________________________
+
+---
+
 🚀 Project Setup Instructions
+
 1. Install Required Tools
-•	Install XAMPP
-•	Install Git
-•	Install VS Code / Any Editor
-________________________________________
+   • Install XAMPP
+   • Install Git
+   • Install VS Code / Any Editor
+
+---
+
 📂 How to Run the Project
 Step 1: Clone the Repository
 git clone https://github.com/Mostakim15/Multi-Service-Assistance-Platform.git
@@ -16,9 +21,9 @@ Place the project folder inside:
 C:\xampp\htdocs\
 Step 3: Start Apache & MySQL
 Open XAMPP → Start:
-•	Apache
-•	MySQL
-________________________________________
+• Apache
+• MySQL
+
 🗄️ Database Setup
 Step 1: Open phpMyAdmin
 Go to browser:
@@ -30,11 +35,11 @@ Step 3: Import SQL File
 Go to Import → choose the provided .sql file → upload.
 If .sql file is not included, extract from your local database:
 Export → SQL → Save → share with team
-________________________________________
+
 🧪 Run the Website
 Project URL:
 http://localhost/msap/
-________________________________________
+
 👥 For Collaboration (Team Members)
 Pull latest changes before starting work
 git pull origin main
@@ -48,6 +53,6 @@ git pull origin main --rebase
 git push origin main
 
 📞 Team Notes
-•	Everyone must pull before editing.
-•	Do not modify another member’s work without permission.
-•	Database changes must be shared via updated .sql file
+• Everyone must pull before editing.
+• Do not modify another member’s work without permission.
+• Database changes must be shared via updated .sql file

@@ -1,11 +1,28 @@
 <?php
-session_start();
+if (session_status() !== PHP_SESSION_ACTIVE) session_start();
 require_once '../../config/db_connect.php';
 require_once '../../config/map_config.php';
 
-if (!isset($_SESSION['user']) || $_SESSION['user']['role']!=='user') {
+// If user not logged in, send them to login and indicate user role
+if (!isset($_SESSION['user'])) {
+  header('Location: ../../auth/login.php?role=user');
+  exit;
+}
+
+// If logged in but not a normal user, route them to their dashboard
+if ($_SESSION['user']['role'] !== 'user') {
+  $role = $_SESSION['user']['role'];
+  if ($role === 'service_admin') {
+    header('Location: ../provider/index.php');
+    exit;
+  } elseif (in_array($role, ['manager','owner'])) {
+    header('Location: ../manager/index.php');
+    exit;
+  } else {
+    // fallback to login
     header('Location: ../../auth/login.php');
     exit;
+  }
 }
 
 // Load categories for filter dropdown

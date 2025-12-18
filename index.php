@@ -11,6 +11,18 @@ try {
     // Log error or handle silently
     error_log("Error fetching categories: " . $e->getMessage());
 }
+
+// Fetch a small preview of approved services to show on the homepage
+try {
+  $svcStmt = $pdo->query("SELECT s.id, s.service_name, s.description, s.image, c.category_name, u.full_name AS provider_name
+              FROM services s
+              JOIN service_categories c ON s.category_id=c.id
+              JOIN users u ON s.provider_id=u.id
+              WHERE s.status='approved' ORDER BY s.id DESC LIMIT 6");
+  $preview_services = $svcStmt->fetchAll(PDO::FETCH_ASSOC);
+} catch (Exception $e) {
+  $preview_services = [];
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -45,11 +57,12 @@ try {
 </header>
 
 <!-- ✅ HERO SECTION -->
+<main>
 <section class="relative bg-blue-600 text-white py-24 text-center">
   <div class="max-w-3xl mx-auto px-6">
     <h1 class="text-4xl font-bold mb-4">Find Nearby Essential Services Instantly</h1>
     <p class="text-lg mb-6">Discover emergency, medical, police, or daily assistance services in your area.</p>
-    <a href="#services" class="px-6 py-3 bg-white text-blue-700 font-semibold rounded-lg shadow hover:bg-blue-50 transition">Explore Services</a>
+    <a href="/msap/public/services.php" class="px-6 py-3 bg-white text-blue-700 font-semibold rounded-lg shadow hover:bg-blue-50 transition">Explore Services</a>
   </div>
   <div class="absolute inset-0 bg-blue-600 opacity-20"></div>
 </section>
@@ -105,6 +118,36 @@ try {
     </div>
   </div>
 </section><!-- ✅ ABOUT SECTION -->
+  <!-- ✅ SERVICES PREVIEW -->
+  <?php if (!empty($preview_services)): ?>
+  <section class="py-12">
+    <div class="max-w-6xl mx-auto px-6">
+      <h2 class="text-2xl font-bold text-center mb-6">Recent Services</h2>
+      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        <?php foreach ($preview_services as $s): ?>
+          <div class="bg-white p-4 rounded-lg shadow">
+            <div class="h-36 bg-gray-100 rounded overflow-hidden mb-3 flex items-center justify-center">
+              <?php if (!empty($s['image'])): ?>
+                <img src="public/<?= htmlspecialchars($s['image']) ?>" alt="<?= htmlspecialchars($s['service_name']) ?>" class="w-full h-full object-cover">
+              <?php else: ?>
+                <div class="text-gray-400">No image</div>
+              <?php endif; ?>
+            </div>
+            <h3 class="font-semibold mb-1"><?= htmlspecialchars($s['service_name']) ?></h3>
+            <p class="text-sm text-slate-600 mb-3"><?= htmlspecialchars(substr($s['description'] ?? '', 0, 100)) ?><?= (strlen($s['description'] ?? '') > 100) ? '...' : '' ?></p>
+            <div class="flex items-center justify-between">
+              <div class="text-xs text-slate-500"><?= htmlspecialchars($s['category_name']) ?> • <?= htmlspecialchars($s['provider_name']) ?></div>
+              <a href="/msap/dashboard/user/service_details.php?id=<?= intval($s['id']) ?>" class="px-3 py-1 bg-blue-600 text-white rounded text-sm">View</a>
+            </div>
+          </div>
+        <?php endforeach; ?>
+      </div>
+      <div class="text-center mt-6">
+        <a href="/msap/public/services.php" class="inline-block px-4 py-2 bg-indigo-600 text-white rounded-md">View All Services</a>
+      </div>
+    </div>
+  </section>
+  <?php endif; ?>
 <section id="about" class="py-16">
   <div class="max-w-4xl mx-auto px-6 text-center">
     <h2 class="text-3xl font-bold mb-4">About MSAP</h2>
@@ -112,7 +155,8 @@ try {
       MSAP (Multi Service Assistance Platform) helps users quickly access emergency and essential services in their area — connecting users, providers, and managers in one integrated system.
     </p>
   </div>
-</section>
+<!-- ✅ FOOTER -->
+  </main>
 
 <!-- ✅ FOOTER -->
 <footer class="bg-gray-900 text-gray-400 py-6 mt-16">
