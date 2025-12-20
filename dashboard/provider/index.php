@@ -135,10 +135,10 @@ $accepted_requests = $accepted_stmt->fetchAll();
             <table class="min-w-full divide-y divide-gray-200">
               <thead class="bg-gray-50">
                 <tr>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requester</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Contact</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Service</th>
-                  <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Requested At</th>
+                  <th class="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Requester</th>
+                  <th class="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Contact</th>
+                  <th class="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Service</th>
+                  <th class="px-6 py-3 text-left text-xs font-bold text-white uppercase tracking-wider">Requested At</th>
                   <th class="px-6 py-3"></th>
                 </tr>
               </thead>
@@ -188,6 +188,6 @@ $accepted_requests = $accepted_stmt->fetchAll();
     </div>
   </main>
 
-  <!-- <?php require_once __DIR__ . '/../../includes/footer.php'; ?> -->
+  <?php require_once __DIR__ . '/../../includes/footer.php'; ?>
 </body>
 </html>

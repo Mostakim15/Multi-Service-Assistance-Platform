@@ -14,11 +14,12 @@ try {
 
 // Fetch a small preview of approved services to show on the homepage
 try {
+  // show a preview of recent services (8 for shorter homepage preview)
   $svcStmt = $pdo->query("SELECT s.id, s.service_name, s.description, s.image, c.category_name, u.full_name AS provider_name
               FROM services s
               JOIN service_categories c ON s.category_id=c.id
               JOIN users u ON s.provider_id=u.id
-              WHERE s.status='approved' ORDER BY s.id DESC LIMIT 6");
+              WHERE s.status='approved' ORDER BY s.id DESC LIMIT 8");
   $preview_services = $svcStmt->fetchAll(PDO::FETCH_ASSOC);
 } catch (Exception $e) {
   $preview_services = [];
@@ -43,10 +44,10 @@ try {
       <span class="text-xl text-slate-700 font-bold ">MSAP</span>
     </a>
     <nav class="hidden md:flex space-x-6 text-sm font-semibold text-slate-600">
-      <a href="index.php" class="text-black-600">Home</a>
-      <a href="#services" class="hover:text-black-600">Services</a>
-      <a href="#about" class="hover:text-black-600">About</a>
-      <a href="#contact" class="hover:text-black-600">Contact</a>
+      <a href="/msap/" class="text-slate-800 hover:text-slate-900">Home</a>
+      <a href="/msap/public/services.php" class="hover:text-slate-900">Services</a>
+      <a href="/msap/public/about.php" class="hover:text-slate-900">About</a>
+      <a href="/msap/public/contact.php" class="hover:text-slate-900">Contact</a>
     </nav>
     <div class="flex items-center space-x-3">
       <a href="auth/login.php?role=user" class="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 text-sm font-semibold">User Login</a>
@@ -72,11 +73,12 @@ try {
 <section id="services" class="py-16 bg-gray-100">
   <div class="max-w-6xl mx-auto px-6">
     <h2 class="text-3xl font-bold text-center mb-10 text-gray-800">Available Services</h2>
-    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center">
+    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8 text-center" id="categories-grid">
 
       <?php if (!empty($categories)): ?>
-        <?php foreach ($categories as $cat): ?>
-          <div class="bg-white p-6 rounded-2xl shadow hover:shadow-lg transition transform hover:-translate-y-1">
+        <?php foreach ($categories as $index => $cat): ?>
+          <?php $extraClass = ($index >= 4) ? 'hidden extra-cat' : ''; ?>
+          <div data-href="/msap/public/services.php?category_id=<?= htmlspecialchars($cat['id']) ?>" role="link" tabindex="0" onclick="window.location=this.dataset.href" onkeydown="if(event.key==='Enter'){window.location=this.dataset.href}" class="<?= $extraClass ?> block bg-white p-6 rounded-2xl shadow hover:shadow-lg transition transform hover:-translate-y-1 cursor-pointer">
             <div class="mx-auto h-16 mb-4 flex items-center justify-center text-3xl">
               <?php 
                 // Map icon names to emojis or use a default icon class
@@ -104,11 +106,20 @@ try {
               ?>
             </div>
             <h3 class="font-semibold text-lg mb-3"><?= htmlspecialchars($cat['category_name']) ?></h3>
-            <a href="dashboard/user/index.php?category_id=<?= htmlspecialchars($cat['id']) ?>" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-semibold inline-block transition">
-              Request Service
-            </a>
+            <div class="mt-2">
+              <a href="dashboard/user/index.php?category_id=<?= htmlspecialchars($cat['id']) ?>" class="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-sm font-semibold inline-block transition">
+                Request Service
+              </a>
+            </div>
           </div>
         <?php endforeach; ?>
+
+        <?php if (count($categories) > 8): ?>
+          <div class="col-span-full text-center mt-4">
+            <button id="toggle-cats" class="px-4 py-2 bg-indigo-600 text-white rounded-md">See more</button>
+          </div>
+        <?php endif; ?>
+
       <?php else: ?>
         <div class="col-span-full text-center text-gray-500 py-8">
           <p>No services available at this time.</p>
@@ -148,15 +159,39 @@ try {
     </div>
   </section>
   <?php endif; ?>
-<section id="about" class="py-16">
-  <div class="max-w-4xl mx-auto px-6 text-center">
-    <h2 class="text-3xl font-bold mb-4">About MSAP</h2>
-    <p class="text-gray-700 leading-relaxed">
-      MSAP (Multi Service Assistance Platform) helps users quickly access emergency and essential services in their area — connecting users, providers, and managers in one integrated system.
-    </p>
-  </div>
-<!-- ✅ FOOTER -->
+  <!-- Short about blurb -->
+  <section id="about" class="py-12 bg-white">
+    <div class="max-w-4xl mx-auto px-6 text-center">
+      <h2 class="text-2xl font-bold mb-2">About MSAP</h2>
+      <p class="text-gray-700 leading-relaxed mb-4">Connecting users with trusted local service providers for emergency and everyday needs. <a href="/msap/public/about.php" class="text-indigo-600 underline">Learn more</a>.</p>
+    </div>
+  </section>
+
   </main>
+
+<!-- Small script to toggle hidden categories -->
+<script>
+  document.addEventListener('DOMContentLoaded', function(){
+    var btn = document.getElementById('toggle-cats');
+    if (!btn) return;
+    btn.addEventListener('click', function(){
+      var hidden = document.querySelectorAll('.extra-cat');
+      var anyHidden = false;
+      hidden.forEach(function(el){
+        if (el.classList.contains('hidden')) anyHidden = true;
+      });
+      if (anyHidden) {
+        hidden.forEach(function(el){ el.classList.remove('hidden'); });
+        btn.textContent = 'Show less';
+      } else {
+        hidden.forEach(function(el){ el.classList.add('hidden'); });
+        btn.textContent = 'See more';
+        // scroll back up to categories grid so user sees the first items
+        document.getElementById('categories-grid').scrollIntoView({behavior: 'smooth'});
+      }
+    });
+  });
+</script>
 
 <!-- ✅ FOOTER -->
 <footer class="bg-gray-900 text-gray-400 py-6 mt-16">

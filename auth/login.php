@@ -64,8 +64,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <body class="bg-gray-50 text-gray-800">
     <?php require_once __DIR__ . '/../includes/header.php'; ?>
 
-    <main class="max-w-md mx-auto px-6 py-12 h-80%vh flex items-center">
-        <div class="bg-white shadow rounded-lg p-6" style="height: 90%;">
+    <main class="max-w-md mx-auto px-6 py-12" style="min-height: calc(100vh - var(--msap-footer-height)); display:flex; align-items:center;">
+        <div class="bg-white shadow rounded-lg p-6 w-full">
             <h2 class="text-xl font-bold mb-4">Login</h2>
             <!-- Requested role is carried in a hidden input but not shown visually to avoid confusion -->
             <?php if(isset($error)) echo "<p class='error text-red-600 mb-2'>$error</p>"; ?>
@@ -82,8 +82,27 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         </div>
        
     </main>
-    <br> <br>
-    <!-- Footer -->
-    <!-- <?php require_once __DIR__ . '/../includes/footer.php'; ?> -->
+<section class="bg-white py-12">
+    <div class="max-w-4xl mx-auto px-6">
+        <h3 class="text-2xl font-bold mb-6 text-center">Why Join MSAP?</h3>
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="text-center">
+                <h4 class="font-semibold mb-2">🚀 Easy Access</h4>
+                <p class="text-gray-600 text-sm">Manage your services and requests in one centralized platform.</p>
+            </div>
+            <div class="text-center">
+                <h4 class="font-semibold mb-2">🛡️ Secure & Reliable</h4>
+                <p class="text-gray-600 text-sm">Your data is protected with enterprise-grade security measures.</p>
+            </div>
+            <div class="text-center">
+                <h4 class="font-semibold mb-2">⚡ Real-Time Updates</h4>
+                <p class="text-gray-600 text-sm">Stay informed with instant notifications and live service tracking.</p>
+            </div>
+        </div>
+    </div>
+</section>
+    <?php require_once __DIR__ . '/../includes/footer.php'; ?>
+
 </body>
 </html>
+

@@ -70,14 +70,14 @@ body {
 main { flex: 1 0 auto; }
 
 /* Fixed footer: prevent content overlap by adding bottom padding equal to footer height */
-:root { --msap-footer-height: 72px; }
+:root { --msap-footer-height: 96px; }
 .msap-footer { box-sizing: border-box; height: var(--msap-footer-height); }
 .msap-footer-fixed { position: fixed; bottom: 0; left: 0; right: 0; z-index: 50; }
 body { padding-bottom: var(--msap-footer-height); }
 
 /* On small screens, increase footer height and body padding to match */
 @media (max-width: 640px) {
-    :root { --msap-footer-height: 96px; }
+    :root { --msap-footer-height: 120px; }
 }
 /* MSAP footer styling to make it look clean on all pages */
 .msap-footer { background: #08223f; }
@@ -85,7 +85,10 @@ body { padding-bottom: var(--msap-footer-height); }
 .msap-footer .links a:hover { text-decoration: underline; }
 .msap-footer .text-sm { color: rgba(230,238,251,0.95); }
 .msap-footer .max-w-7xl { width: 100%; }
-.msap-footer { box-shadow: 0 -6px 20px rgba(3,7,18,0.45); }
+.msap-footer { /* remove upward shadow so footer visually sits flush against viewport bottom */
+    box-shadow: 0 6px 18px rgba(2,6,23,0.18);
+    border-top: 1px solid rgba(255,255,255,0.04);
+}
 
 /* Table heading improvements for better contrast & readability */
 table thead th,
