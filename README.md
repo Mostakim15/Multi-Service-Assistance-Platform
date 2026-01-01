@@ -36,7 +36,7 @@ Go to Import → choose the provided .sql file → upload.
 If .sql file is not included, extract from your local database:
 Export → SQL → Save → share with team
 
-🧪 Run the Website
+Run the Website
 Project URL:
 http://localhost/msap/
 

@@ -67,7 +67,7 @@ if (!empty($_SESSION['user']['avatar'])) {
         <a href="/msap/public/contact.php" class="<?= $is_contact ? 'text-sky-600' : 'hover:text-sky-600' ?>">Contact</a>
       </nav>
 
-      <!-- Right: search + user (hidden on auth pages to avoid showing user UI on login/register) -->
+      <!-- Right:  search + user (hidden on auth pages to avoid showing user UI on login/register) -->
       <?php if (!$isAuthPage): ?>
       <div class="flex items-center space-x-4">
         <form action="/msap/search.php" method="get" class="hidden sm:flex">
